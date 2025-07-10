@@ -8,7 +8,7 @@
 : ${RSYNC_EXCLUDE:="git ls-files --exclude-standard -oi --directory"}
 : ${RSYNC_QUIET:="1"}
 : ${REPOSYNC_DB:="$HOME/reposync.db"}
-: ${REPOSYNC_SETUP:="set -e; uname -prs; . ~/.profile"}
+: ${REPOSYNC_SETUP:="uname -prs; . ~/.profile; set -e"}
 
 trap 'printf "reposync: exit code $? on line $LINENO\n" >&2; exit 1' ERR \
 	2> /dev/null || exec bash $0 "$@"
@@ -79,7 +79,7 @@ case $action in
 			[ $RSYNC_QUIET == "1" ] || cat $tmp/out $tmp/err
 		
 			# Execute remote commands
-			ssh $host "$REPOSYNC_SETUP; cd $repo; $@" \
+			ssh $host "$REPOSYNC_SETUP; cd $repo; $*" \
 				|| {
 					log 196 "FAIL"
 					sqlite3 $REPOSYNC_DB "UPDATE ci SET last_fail=unixepoch('now','subsec') WHERE hostname='$host'"

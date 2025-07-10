@@ -4,6 +4,9 @@ reposync: reposync.sh
 	sed -e 's/$${release}/${RELEASE}/' reposync.sh > $@
 	@chmod +x $@
 
+check: reposync
+	@./system_test.sh
+
 install: ${TARGETS}
 	@mkdir -p ${DESTDIR}${PREFIX}/bin
 	install reposync ${DESTDIR}${PREFIX}/bin/
