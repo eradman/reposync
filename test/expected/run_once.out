@@ -1,9 +1,9 @@
 [38;5;39m[7malpine[0m
-openrsync --recursive --links --delete --perms --exclude-from=/tmp/reposync.reposync/exclude . alpine:git/reposync/
-ssh alpine 'set -e; uname -prs; . ~/.profile; cd git/reposync; hostname'
+openrsync --rsync-path rsync --exclude-from=/tmp/reposync.reposync/exclude --recursive --links --delete --perms . alpine:git/reposync/
+ssh alpine 'uname -prs; . ~/.profile; set -e; cd git/reposync; hostname'
 [38;5;190mPASS[0m
 [38;5;39m[7mbhyve1[0m
-openrsync --recursive --links --delete --perms --exclude-from=/tmp/reposync.reposync/exclude . bhyve1:git/reposync/
-ssh bhyve1 'set -e; uname -prs; . ~/.profile; cd git/reposync; hostname'
+openrsync --rsync-path rsync --exclude-from=/tmp/reposync.reposync/exclude --recursive --links --delete --perms . bhyve1:git/reposync/
+ssh bhyve1 'uname -prs; . ~/.profile; set -e; cd git/reposync; hostname'
 [38;5;190mPASS[0m
 [38;5;226mEXIT 0[0m

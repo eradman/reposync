@@ -28,7 +28,8 @@ usage() {
 	release: ${release}
 	usage:
 	  reposync init|list
-	  reposync add|remove host
+	  reposync add host [rsync_path]
+	  reposync remove host
 	  reposync run 'cmd; cmd; ...'
 	MSG
 	exit 1
@@ -46,17 +47,27 @@ case $action in
 		sqlite3 $REPOSYNC_DB <<-SQL
 		CREATE TABLE ci (
 		  hostname text UNIQUE,
+		  rsync_path text DEFAULT('rsync'),
 		  last_fail real DEFAULT(unixepoch('now','subsec'))
 		)
 		SQL
 		;;
 	list)
 		[ $# -eq 0 ] || usage
-		sqlite3 $REPOSYNC_DB "SELECT hostname FROM ci ORDER BY hostname"
+		sqlite3 $REPOSYNC_DB "SELECT hostname, rsync_path FROM ci ORDER BY hostname"
 		;;
 	add)
-		[ $# -eq 1 ] || usage
-		sqlite3 $REPOSYNC_DB "INSERT INTO ci (hostname) VALUES ('$1')"
+		case $# in
+			1)
+				sqlite3 $REPOSYNC_DB "INSERT INTO ci (hostname) VALUES ('$1')"
+				;;
+			2)
+				sqlite3 $REPOSYNC_DB "INSERT INTO ci (hostname, rsync_path) VALUES ('$1', '$2')"
+				;;
+			*)
+				usage
+				;;
+		esac
 		;;
 	remove)
 		[ $# -eq 1 ] || usage
@@ -69,10 +80,13 @@ case $action in
 		
 		for host in $(sqlite3 $REPOSYNC_DB "SELECT hostname FROM ci ORDER BY last_fail DESC, hostname"); do
 			log_inverted 39 $host
+			rsync_path=$(sqlite3 $REPOSYNC_DB "SELECT rsync_path FROM ci WHERE hostname='$host'")
 		
 			# Sync regular files, not including files ignored by git
 			# Don't set file times since this confuses make(1)
-			$RSYNC $RSYNC_ARGS --exclude-from=$tmp/exclude . $host:$repo/ > $tmp/out 2> $tmp/err || {
+			$RSYNC --rsync-path $rsync_path \
+					--exclude-from=$tmp/exclude \
+					$RSYNC_ARGS . $host:$repo/ > $tmp/out 2> $tmp/err || {
 				cat $tmp/out $tmp/err
 				exit 1
 			}

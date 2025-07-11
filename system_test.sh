@@ -27,7 +27,7 @@ try "initial setup"
 	reset
 	./reposync init
 	./reposync add alpine
-	./reposync add bhyve1
+	./reposync add freebsd openrsync
 	./reposync add macmini-m1
 	./reposync list > $expected.out
 	check
