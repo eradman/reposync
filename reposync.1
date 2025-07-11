@@ -1,0 +1,52 @@
+.\"
+.\" Copyright (c) 2025 Eric Radman <ericshane@eradman.com>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd July 11, 2025
+.Dt REPOSYNC 1
+.Os
+.Sh NAME
+.Nm reposync
+.Nd low-friction distributed testing
+.Sh SYNOPSIS
+.Nm reposync
+.Ar init|list
+.Nm reposync
+.Ar add Ar hostname Op Ar rsync_path
+.Nm reposync
+.Ar remove Ar hostname
+.Nm reposync
+.Ar run Ar 'cmd, ...'
+.Sh DESCRIPTION
+The
+.Nm
+utility replicates a local repository to remote hosts for regression testing,
+excluding patterns in
+.Pa .gitignore .
+Execution is order prioritizes the last host to return a non-zero exit code.
+.Sh ENVIRONMENT
+.Bl -tag -width REPOSYNC_SETUP
+.It Ev REPOSYNC_DB
+SQLite database containing hosts and execution status.
+Default is
+.Pa ~/reposync.db
+.It Ev REPOSYNC_SETUP
+Set of commands to run on each host before command line arguments.
+.El
+.Sh EXAMPLES
+Build and system tests on all hosts
+.Pp
+.Dl reposync run 'make; ./system_test.sh'
+.Sh SEE ALSO
+.Xr openrsync 1

@@ -1,13 +1,13 @@
 Low-Friction Distributed Testing
 ================================
 
-A minimalist CI/CD utility for replicating a local repository to remote hosts for
-regression testing.
+A minimalist CI/CD utility for replicating a local repository to remote hosts
+for regression testing.
 
 Features:
 
 * Try regressions without having to commit changes
-* Files marked by `.gitignore` are not replicated
+* Files matching `.gitignore` are not replicated
 * Subsequent invocations prioritize last host to fail
 
 Dependencies
@@ -25,6 +25,13 @@ Installation
 Or to specify a specific installation location
 
     PREFIX=$HOME/local make install
+
+Man Page Examples for reposync(1)
+---------------------------------
+
+Build and system tests on all hosts
+
+    reposync run 'make; ./system_test.sh'
 
 News
 ----

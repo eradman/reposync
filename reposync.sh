@@ -19,6 +19,7 @@ tmp=${SYSTMP:-/tmp}/reposync.$(basename $PWD)
 log() {
 	printf "\e[38;5;${1}m${2}\e[0m\n"
 }
+
 log_inverted() {
 	printf "\e[38;5;${1}m\e[7m${2}\e[0m\n"
 }
