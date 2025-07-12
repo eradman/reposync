@@ -1,5 +1,11 @@
 = Release History
 
+== 1.1: July 12, 2025
+
+- Add reposync(1) man page
+- Define rsync_program for each host
+- Use set -e after .profile is evaluated
+
 == 1.0: July 01, 2025
 
  - Initial release at https://github.com/eradman/reposync

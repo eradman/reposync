@@ -1,4 +1,4 @@
-RELEASE = 1.0
+RELEASE = 1.1
 PREFIX ?= /usr/local
 MANPREFIX ?= ${PREFIX}/man
 
